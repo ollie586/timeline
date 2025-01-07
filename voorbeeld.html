@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Timeline</title>
+    <script type="text/javascript"
+        src="https://unpkg.com/vis-timeline@7.4.3/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet"
+        type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+    <div id="header">
+        <h2>Active Tasks</h2>
+        <!-- these button change the scale format of the timeline -->
+        <div>
+            <button onclick="Day()" class="check">Day</button>
+            <button onclick="Week()" class="check">Week</button>
+            <button onclick="Month()" class="check">Month</button>
+            <button onclick="Year()" class="check" id="year" style="border-radius: 5%;">2024</button>
+        </div>
+    </div>
+    <!-- container for timeline -->
+    <div id="container"></div>
+
+    <script type="text/javascript">
+        function Day() {
+            // items.update([
+            //     { id: 1, content: [50, 'Testing'], start: '2024-11-21T10:00:00', end: '2024-11-21T16:00:00', },
+            //     { id: 2, content: [70, 'Products module'], start: '2024-11-21T10:00:00', end: '2024-11-21T16:00:00' },
+            //     { id: 3, content: [40, 'Customers module'], start: '2024-11-21T12:00:00', end: '2024-11-21T18:00:00' },
+            //     { id: 4, content: [20, 'Dancing module'], start: '2024-11-21T08:00:00', end: '2024-11-21T14:00:00' },
+            // ]);
+
+            // changes the time formate to a day
+            timeline.setOptions({
+                start: '2024-11-21T08:00:00',
+                end: '2024-11-21T20:00:00',
+                min: '2024-11-21T08:00:00',
+                max: '2024-11-21T20:00:00',
+                timeAxis: { scale: 'hour', step: 1 },
+            })
+        }
+
+        function Week() {
+            // changes the time formate to a weeks
+            timeline.setOptions({
+                start: '2024-11-20',
+                end: '2024-12-20',
+                min: '2024-11-20',
+                max: '2024-12-20',
+                timeAxis: { scale: 'week', step: 1 },
+            })
+        }
+
+        function Month() {
+            // changes the time formate to months
+            timeline.setOptions({
+                start: '2024-11-20',
+                end: '2025-06-20',
+                min: '2024-11-20',
+                max: '2025-06-20',
+                timeAxis: { scale: 'month', step: 1 },
+            })
+        }
+        // changes the time formate to a year
+        function Year() {
+            timeline.setOptions({
+                start: '2024-11-20',
+                end: '2025-11-20',
+                min: '2024-11-20',
+                max: '2025-06-20',
+                timeAxis: { scale: 'month', step: 1 },
+            })
+        }
+
+
+        // selects the container for the timeline
+        var container = document.getElementById('container');
+
+        var items = new vis.DataSet([
+            //day
+            { id: 1, content: [50, 'Testing', '#056EE9'], className: 'timeline', start: '2024-11-21T10:00:00', end: '2024-11-21T16:00:00' },
+            { id: 2, content: [70, 'Products module', '#D81A48'], className: 'timeline', start: '2024-11-21T10:00:00', end: '2024-11-21T16:00:00' },
+            { id: 3, content: [40, 'Customers module', '#04B440'], className: 'timeline', start: '2024-11-21T12:00:00', end: '2024-11-21T18:00:00' },
+            { id: 4, content: [20, 'Dancing module', '#7239EA'], className: 'timeline', start: '2024-11-21T08:00:00', end: '2024-11-21T14:00:00' },
+            //week
+            { id: 5, content: [50, 'Testing', '#056EE9'], className: 'timeline', start: '2024-11-27', end: '2024-12-2' },
+            { id: 6, content: [70, 'Products module', '#D81A48'], className: 'timeline', start: '2024-12-11', end: '2024-12-18' },
+            { id: 7, content: [40, 'Customers module', '#04B440'], className: 'timeline', start: '2024-11-21', end: '2024-11-28' },
+            { id: 8, content: [20, 'Dancing module', '#7239EA'], className: 'timeline', start: '2024-12-05', end: '2024-12-09' },
+            //month
+            { id: 9, content: [50, 'Testing', '#056EE9'], className: 'timeline', start: '2024-11-27', end: '2025-05-2' },
+            { id: 10, content: [70, 'Products module', '#D81A48'], className: 'timeline', start: '2024-12-11', end: '2025-02-18' },
+            { id: 11, content: [40, 'Customers module', '#04B440'], className: 'timeline', start: '2024-11-21', end: '2025-03-28' },
+            { id: 12, content: [20, 'Dancing module', '#7239EA'], className: 'timeline', start: '2024-12-05', end: '2025-04-09' },
+        ]);
+
+        // sets the options for the timeline
+        var options = {
+            template: function (items) {
+                hexColor = items.content[2].replace(`#`, ``);
+                const decimalColor = parseInt(hexColor, 16);
+                let r = (decimalColor >> 16) + 50;
+                r > 255 && (r = 255);
+                r < 0 && (r = 0);
+                let g = (decimalColor & 0x0000ff) + 50;
+                g > 255 && (g = 255);
+                g < 0 && (g = 0);
+                let b = ((decimalColor >> 8) & 0x00ff) + 50;
+                b > 255 && (b = 255);
+                b < 0 && (b = 0);
+                color = `#${(g | (b << 8) | (r << 16)).toString(16)}`;
+
+                html = '<div class="timeline" style="background-color: ' + color + '60;"> <div class="contents" style="width: ' + items.content[0] + '%; background-color: ' + items.content[2] + ';"><img src="picture.webp"><p><b class="module">' + items.content[1] + '</b></p></div><h3>' + items.content[0] + '%</h3></div>';
+                return html;
+            },
+            editable: true,
+            zoomable: false,
+            start: '2024-11-21T08:00:00',
+            end: '2024-11-21T20:00:00',
+            min: '2024-11-21T08:00:00',
+            max: '2024-11-21T20:00:00',
+            width: '100%',
+            height: '400px',
+            style: 'surface',
+            timeAxis: { scale: 'hour', step: 1 },
+        }
+
+        // creates a new timeline
+        var timeline = new vis.Timeline(container, items, options);
+
+        // opens the edit/add modal and fills data for editing
+        timeline.on('select', function (event) {
+            console.log(event);
+            if (document.getElementById("modal").style.display == "none") {
+                document.getElementById("modal").style.display = "block";
+            } else {
+                document.getElementById("modal").style.display = "none";
+            }
+            id = this.itemSet.items[event.items].id;
+            procent = this.itemSet.items[event.items].data.content[0];
+            title = this.itemSet.items[event.items].data.content[1];
+            color = this.itemSet.items[event.items].data.content[2]
+            document.getElementById("procent").value = procent;
+            document.getElementById("title").value = title;
+            document.getElementById("id").value = id;
+            document.getElementById("color").value = color;
+        })
+
+        // grabs the neccesary data and edits current data
+        function edit() {
+            title = document.getElementById("title").value;
+            procent = document.getElementById("procent").value
+            color = document.getElementById("color").value;
+            timeline.itemSet.items[document.getElementById("id").value].data.content[0] = procent;
+            timeline.itemSet.items[document.getElementById("id").value].data.content[1] = title;
+            timeline.itemSet.items[document.getElementById("id").value].data.content[2] = color;
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // reveals the moadal
+        function revealModal() {
+            if (document.getElementById("modal").style.display == "block") {
+                document.getElementById("modal").style.display = "none";
+            } else {
+                document.getElementById("modal").style.display = "block";
+            }
+            Dat = new Date(Date.parse(timeline.options.start));
+            k = new Date(Dat).toDateString();
+            console.log(k);
+            document.getElementById("start").value = Dat;
+        }
+
+        // adds an object to the timiline
+        function addObject() {
+            k = timeline.itemSet.items;
+            l = Object.keys(k).length;
+            procent = document.getElementById("procent").value;
+            title = document.getElementById("title").value;
+            color = document.getElementById("color").value
+            id = l + 1;
+            startdate = document.getElementById("start").value + ':00';
+            enddate = document.getElementById("end").value + ':00';
+            console.log(enddate);
+            item = { id: id, content: [procent, title, color], className: 'timeline', start: startdate, end: enddate }
+            timeline.itemsData.add(item);
+            document.getElementById("modal").style.display = "none";
+            document.getElementById("start").value = "";
+            document.getElementById("end").value = "";
+        }
+
+        //changes the format on the timeline
+        function changeFormat() {
+            start = document.getElementById("formatStartDate").value + ":00";
+            end = document.getElementById("formatEndDate").value + ":00";
+            console.log(start);
+            console.log(end);
+            timeline.setOptions({
+                start: start,
+                end: end,
+                min: start,
+                end: end
+            })
+        }
+    </script>
+    <button onclick="revealModal()">
+        <h2>Add</h2>
+    </button>
+    <div id="modal" style="display: none;">
+        <div id="modal-content">
+            <!-- edit title -->
+            <h2>Title</h2>
+            <input type="text" id="title">
+            <!-- edit procent -->
+            <h2>Procent</h2>
+            <input type="number" id="procent">
+            <!-- keeps track of the right id for editing -->
+            <input type="number" id="id" style="display: none">
+            <!-- edits color -->
+            <input type="color" id="color">
+            <!-- edits an object -->
+            <button onclick="edit()">
+                <h3>Edit</h3>
+            </button>
+            <!-- sets start and end date for an object -->
+            <h2>Start</h2>
+            <input type="datetime-local" id="start">
+            <h2>Einde</h2>
+            <input type="datetime-local" id="end">
+            <!-- adds an object -->
+            <button onclick="addObject()">
+                <h3>Add</h3>
+            </button>
+        </div>
+    </div>
+    <!-- the form to change the format -->
+    <input type="datetime-local" id="formatStartDate">
+    <input type="datetime-local" id="formatEndDate">
+    <button onclick="changeFormat()">Change format</button>
+</body>
+
+</html>
